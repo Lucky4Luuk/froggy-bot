@@ -2,8 +2,10 @@ using System;
 using Raven.Client.Documents;
 using Raven.Embedded;
 
+using FroggyBot.Database.Models;
+
 namespace FroggyBot.Database {
-	public class DatabaseInterface : IDisposable {
+	public class DatabaseManager : IDisposable {
 		public readonly IDocumentStore Store;
 
 		public DatabaseManager() {

@@ -2,19 +2,24 @@
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using FroggyBot.Services;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
 
+using FroggyBot.Services;
+using FroggyBot.Database;
+
 namespace FroggyBot
 {
     class Program
     {
+        public DatabaseManager db = new DatabaseManager();
+
         static void Main(string[] args) => new Program().MainAsync().GetAwaiter().GetResult();
 
         public async Task MainAsync() {
+
             var config = new DiscordSocketConfig {
                 TotalShards = 1,
             };
