@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 
 namespace FroggyBot {
 	public enum LogLevel {
@@ -28,7 +28,7 @@ namespace FroggyBot {
 				Console.Write($"[{level}] ");
 				Console.ResetColor();
 				Console.Write(message);
-				Console.WriteLine();
+				Console.WriteLine("🐸");
 			}
 		}
 
@@ -41,7 +41,7 @@ namespace FroggyBot {
 				case LogLevel.Info:
 					return ConsoleColor.Green;
 				case LogLevel.Warning:
-					return ConsoleColor.Orange;
+					return ConsoleColor.DarkYellow;
 				case LogLevel.Error:
 					return ConsoleColor.Red;
 				default:
