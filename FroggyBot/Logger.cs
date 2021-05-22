@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 
 namespace FroggyBot {
 	public enum LogLevel {
@@ -28,7 +28,7 @@ namespace FroggyBot {
 				Console.Write($"[{level}] ");
 				Console.ResetColor();
 				Console.Write(message);
-				Console.WriteLine();
+				Console.WriteLine("🐸");
 			}
 		}
 
