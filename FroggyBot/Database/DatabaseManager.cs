@@ -5,31 +5,37 @@ using Raven.Embedded;
 using FroggyBot.Database.Models;
 
 namespace FroggyBot.Database {
-	public class DatabaseManager : IDisposable {
-		public readonly IDocumentStore Store;
+    public class DatabaseManager : IDisposable {
+        public readonly IDocumentStore Store;
 
-		public DatabaseManager() {
-			EmbeddedServer.Instance.StartServer();
-			Store = EmbeddedServer.Instance.GetDocumentStore("Froggy");
-		}
+        public DatabaseManager() {
+            var opts = new ServerOptions();
+            if (Environment.GetEnvironmentVariable("CONTAINERIZED") == "true")
+            {
+                opts.FrameworkVersion = "5.0.x";
+            }
 
-		public void Dispose() {
-			Store.Dispose();
-		}
+            EmbeddedServer.Instance.StartServer(opts);
+            Store = EmbeddedServer.Instance.GetDocumentStore("Froggy");
+        }
 
-		public T Get<T>(string id) where T : DatabaseItem {
-			using (var session = Store.OpenSession())
-				return session.Load<T>(id);
-		}
+        public void Dispose() {
+            Store.Dispose();
+        }
 
-		public void Save<T>(T item) where T : DatabaseItem {
-			if (item == null)
-				return;
+        public T Get<T>(string id) where T : DatabaseItem {
+            using (var session = Store.OpenSession())
+                return session.Load<T>(id);
+        }
 
-			using (var session = Store.OpenSession()) {
-				session.Store(item, item.Id);
-				session.SaveChanges();
-			}
-		}
-	}
+        public void Save<T>(T item) where T : DatabaseItem {
+            if (item == null)
+                return;
+
+            using (var session = Store.OpenSession()) {
+                session.Store(item, item.Id);
+                session.SaveChanges();
+            }
+        }
+    }
 }
