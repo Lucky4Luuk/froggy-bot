@@ -10,7 +10,7 @@ namespace FroggyBot {
 	}
 
 	public static class Logger {
-		private static LogLevel _maxLevel;
+		private static LogLevel _minLevel;
 		private static readonly object _lock = new object();
 
 		public static void Trace(string message) => Log(LogLevel.Trace, message);
@@ -19,8 +19,12 @@ namespace FroggyBot {
 		public static void Warning(string message) => Log(LogLevel.Warning, message);
 		public static void Error(string message) => Log(LogLevel.Error, message);
 
+		public static void Initialize(LogLevel minLevel) {
+			_minLevel = minLevel;
+		}
+
 		private static void Log(LogLevel level, string message) {
-			if (level < _maxLevel)
+			if (level < _minLevel)
 				return;
 
 			lock (_lock) {
