@@ -5,7 +5,6 @@ using Discord.Commands;
 
 namespace FroggyBot.Modules
 {
-    // Remember to make your module reference the ShardedCommandContext
     public class AdminModule : ModuleBase<ShardedCommandContext>
     {
 		[RequireUserPermission(GuildPermission.KickMembers)]

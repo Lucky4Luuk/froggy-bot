@@ -3,7 +3,6 @@ using Discord.Commands;
 
 namespace FroggyBot.Modules
 {
-    // Remember to make your module reference the ShardedCommandContext
     public class PublicModule : ModuleBase<ShardedCommandContext>
     {
         [Command("info")]
