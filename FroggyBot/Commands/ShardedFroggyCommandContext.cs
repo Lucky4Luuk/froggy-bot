@@ -7,10 +7,12 @@ namespace FroggyBot.Commands
 {
     public class ShardedFroggyCommandContext : ShardedCommandContext
     {
-        public ShardedFroggyCommandContext(DiscordShardedClient client, SocketUserMessage msg, GuildItem gi) : base(client, msg)
-            => GuildItem = gi;
+        public ShardedFroggyCommandContext(DiscordShardedClient client, SocketUserMessage msg, DatabaseManager _db, GuildItem gi) : base(client, msg) {
+            guildItem = gi;
+            db = _db;
+        }
 
-        public GuildItem GuildItem { get; }
-
+        public GuildItem guildItem { get; }
+        public DatabaseManager db { get; set; }
     }
 }

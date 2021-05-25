@@ -13,7 +13,7 @@ namespace FroggyBot.Modules
         {
             var msg = $@"Hi {Context.User}! There are currently {Context.Client.Shards.Count} shards!
                 This guild is being served by shard number {Context.Client.GetShardFor(Context.Guild).ShardId}
-                Prefix: `{Context.GuildItem.prefix}`";
+                Prefix: `{Context.guildItem.prefix}`";
             await ReplyAsync(msg);
         }
     }
