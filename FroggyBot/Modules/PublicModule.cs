@@ -7,7 +7,7 @@ using FroggyBot.Database.Models;
 namespace FroggyBot.Modules
 {
     public class PublicModule : ModuleBase<ShardedFroggyCommandContext>
-	{
+    {
         [Command("info")]
         public async Task InfoAsync()
         {
