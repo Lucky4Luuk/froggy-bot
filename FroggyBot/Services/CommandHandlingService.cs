@@ -44,21 +44,21 @@ namespace FroggyBot.Services
                 return;
 
             if(!(rawMessage.Channel is SocketGuildChannel))
-				return;
+                return;
 
             //might cache this?
-			var guildItem = GuildItem.GetGuildItem(_services.GetRequiredService<DatabaseManager>(),
-				(rawMessage.Channel as SocketGuildChannel).Guild.Id);
+            var guildItem = GuildItem.GetGuildItem(_services.GetRequiredService<DatabaseManager>(),
+                (rawMessage.Channel as SocketGuildChannel).Guild.Id);
 
-			var context = new ShardedFroggyCommandContext(_discord, message, guildItem);
+            var context = new ShardedFroggyCommandContext(_discord, message, guildItem);
 
-			// This value holds the offset where the prefix ends
-			var argPos = 0;
+            // This value holds the offset where the prefix ends
+            var argPos = 0;
             if (!message.HasMentionPrefix(_discord.CurrentUser, ref argPos))
-				if (!message.HasStringPrefix(context.GuildItem.prefix, ref argPos))
-					return;
+                if (!message.HasStringPrefix(context.GuildItem.prefix, ref argPos))
+                    return;
 
-			// A new kind of command context, ShardedCommandContext can be utilized with the commands framework
+            // A new kind of command context, ShardedCommandContext can be utilized with the commands framework
             await _commands.ExecuteAsync(context, argPos, _services);
         }
 
