@@ -43,10 +43,11 @@ namespace FroggyBot
         }
 
         private ServiceProvider ConfigureServices(DiscordSocketConfig config) {
-            return new ServiceCollection()
-                .AddSingleton(new DiscordShardedClient(config))
-                .AddSingleton<CommandService>()
-                .AddSingleton<CommandHandlingService>()
+			return new ServiceCollection()
+				.AddSingleton(new DiscordShardedClient(config))
+				.AddSingleton<CommandService>()
+				.AddSingleton<CommandHandlingService>()
+				.AddSingleton(db)
                 .BuildServiceProvider();
         }
 

@@ -6,6 +6,10 @@ using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 
+using FroggyBot.Database;
+using FroggyBot.Database.Models;
+using FroggyBot.Commands;
+
 namespace FroggyBot.Services
 {
     public class CommandHandlingService
@@ -14,16 +18,12 @@ namespace FroggyBot.Services
         private readonly DiscordShardedClient _discord;
         private readonly IServiceProvider _services;
 
-		//TODO: Prefix per server?
-		private readonly String _prefix;
-
         public CommandHandlingService(IServiceProvider services)
         {
             _commands = services.GetRequiredService<CommandService>();
             _discord = services.GetRequiredService<DiscordShardedClient>();
             _services = services;
 
-			_prefix = "!";
 
             _commands.CommandExecuted += CommandExecutedAsync;
             _commands.Log += LogAsync;
@@ -43,14 +43,22 @@ namespace FroggyBot.Services
             else if (message.Source != MessageSource.User)
                 return;
 
-            // This value holds the offset where the prefix ends
-            var argPos = 0;
+            if(!(rawMessage.Channel is SocketGuildChannel))
+				return;
+
+            //might cache this?
+			var guildItem = GuildItem.GetGuildItem(_services.GetRequiredService<DatabaseManager>(),
+				(rawMessage.Channel as SocketGuildChannel).Guild.Id);
+
+			var context = new ShardedFroggyCommandContext(_discord, message, guildItem);
+
+			// This value holds the offset where the prefix ends
+			var argPos = 0;
             if (!message.HasMentionPrefix(_discord.CurrentUser, ref argPos))
-				if (!message.HasStringPrefix(_prefix, ref argPos))
+				if (!message.HasStringPrefix(context.GuildItem.prefix, ref argPos))
 					return;
 
-            // A new kind of command context, ShardedCommandContext can be utilized with the commands framework
-            var context = new ShardedCommandContext(_discord, message);
+			// A new kind of command context, ShardedCommandContext can be utilized with the commands framework
             await _commands.ExecuteAsync(context, argPos, _services);
         }
 

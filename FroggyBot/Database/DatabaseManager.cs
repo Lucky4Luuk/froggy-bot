@@ -17,7 +17,8 @@ namespace FroggyBot.Database {
 
             EmbeddedServer.Instance.StartServer(opts);
             Store = EmbeddedServer.Instance.GetDocumentStore("Froggy");
-        }
+			Console.WriteLine($"RavenDB dashboard: {Store.Urls[0]}");
+		}
 
         public void Dispose() {
             Store.Dispose();
