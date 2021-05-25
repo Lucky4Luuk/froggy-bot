@@ -5,12 +5,12 @@ using FroggyBot.Database.Models;
 
 namespace FroggyBot.Commands
 {
-	public class ShardedFroggyCommandContext : ShardedCommandContext
-	{
-		public ShardedFroggyCommandContext(DiscordShardedClient client, SocketUserMessage msg, GuildItem gi) : base(client, msg)
-			=> GuildItem = gi;
-		
-		public GuildItem GuildItem { get; }
+    public class ShardedFroggyCommandContext : ShardedCommandContext
+    {
+        public ShardedFroggyCommandContext(DiscordShardedClient client, SocketUserMessage msg, GuildItem gi) : base(client, msg)
+            => GuildItem = gi;
 
-	}
+        public GuildItem GuildItem { get; }
+
+    }
 }
