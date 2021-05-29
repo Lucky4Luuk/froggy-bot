@@ -27,5 +27,20 @@ namespace FroggyBot.Modules
 
             await ReplyAsync(msg);
         }
+
+        [RequireUserPermission(GuildPermission.ManageGuild)]
+        [Command("prefix", true)]
+        public async Task PrefixAsync(string prefix = null)
+        {
+            if(string.IsNullOrWhiteSpace(prefix))
+            {
+				await ReplyAsync($"Current prefix is `{Context.guildItem.prefix}`."
+                +$"\nTo chage current prefix: `{Context.guildItem.prefix}prefix <new prefix>`");
+				return;
+			}
+			Context.guildItem.prefix = prefix;
+			Context.db.Save<GuildItem>(Context.guildItem);
+			await ReplyAsync($"Server prefix set to {prefix}");
+		}
     }
 }

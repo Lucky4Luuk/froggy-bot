@@ -9,6 +9,7 @@ using Discord.WebSocket;
 using FroggyBot.Database;
 using FroggyBot.Database.Models;
 using FroggyBot.Commands;
+using System.Linq;
 
 namespace FroggyBot.Services
 {
@@ -43,23 +44,34 @@ namespace FroggyBot.Services
             else if (message.Source != MessageSource.User)
                 return;
 
-            if(!(rawMessage.Channel is SocketGuildChannel))
-                return;
+            if(rawMessage.Channel is SocketTextChannel txtChannel)
+            {
+                //might cache this?
+                var guildItem = GuildItem.GetGuildItem(_services.GetRequiredService<DatabaseManager>(),
+                    txtChannel.Guild.Id);
 
-            //might cache this?
-            var guildItem = GuildItem.GetGuildItem(_services.GetRequiredService<DatabaseManager>(),
-                (rawMessage.Channel as SocketGuildChannel).Guild.Id);
+                var context = new ShardedFroggyCommandContext(_discord, message, _services.GetRequiredService<DatabaseManager>(), guildItem);
 
-            var context = new ShardedFroggyCommandContext(_discord, message, _services.GetRequiredService<DatabaseManager>(), guildItem);
+                // This value holds the offset where the prefix ends
+                var argPos = 0;
+				if (!message.HasMentionPrefix(_discord.CurrentUser, ref argPos))
+                {
+                    if (!message.HasStringPrefix(context.guildItem.prefix, ref argPos))
+                    {
+						if(message.MentionedUsers.Any(_ => _.Id == _discord.CurrentUser.Id))
+                        {
+                            if(message.Content.StartsWith(_discord.CurrentUser.Mention))
+							    await txtChannel.SendMessageAsync($"The server prefix is: `{guildItem.prefix}`");
+                            else
+								await message.AddReactionAsync(new Emoji("\U0001F438"));
+						}
+						return;
+					}                    
+                }
 
-            // This value holds the offset where the prefix ends
-            var argPos = 0;
-            if (!message.HasMentionPrefix(_discord.CurrentUser, ref argPos))
-                if (!message.HasStringPrefix(context.guildItem.prefix, ref argPos))
-                    return;
-
-            // A new kind of command context, ShardedCommandContext can be utilized with the commands framework
-            await _commands.ExecuteAsync(context, argPos, _services);
+                // A new kind of command context, ShardedCommandContext can be utilized with the commands framework
+                await _commands.ExecuteAsync(context, argPos, _services);
+            }
         }
 
         public async Task CommandExecutedAsync(Optional<CommandInfo> command, ICommandContext context, IResult result)
