@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 
 using Discord;
 using Discord.Commands;
+using Discord.WebSocket;
 
 using FroggyBot.Commands;
 using FroggyBot.Database;
@@ -14,7 +15,7 @@ namespace FroggyBot.Modules
     {
         [RequireUserPermission(GuildPermission.KickMembers)]
         [Command("warn")]
-        public async Task WarnAsync(IUser user = null, string reason = null) //Will take a user id as well
+        public async Task WarnAsync(SocketGuildUser user = null, [Remainder] string reason = null) //Will take a user id as well
         {
             reason = reason ?? "No reason provided.";
             var msg = $"Guild ID: {Context.guildItem.Id}";
